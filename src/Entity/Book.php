@@ -69,9 +69,16 @@ class Book
     #[Groups(['book:read', 'book:write'])]
     private Collection $categorie;
 
+    /**
+     * @var Collection<int, Img>
+     */
+    #[ORM\OneToMany(targetEntity: Img::class, mappedBy: 'book')]
+    private Collection $image;
+
     public function __construct()
     {
         $this->categorie = new ArrayCollection();
+        $this->image = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -183,6 +190,36 @@ class Book
     public function removeCategorie(Categorie $categorie): static
     {
         $this->categorie->removeElement($categorie);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Img>
+     */
+    public function getImage(): Collection
+    {
+        return $this->image;
+    }
+
+    public function addImage(Img $image): static
+    {
+        if (!$this->image->contains($image)) {
+            $this->image->add($image);
+            $image->setBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Img $image): static
+    {
+        if ($this->image->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getBook() === $this) {
+                $image->setBook(null);
+            }
+        }
 
         return $this;
     }
