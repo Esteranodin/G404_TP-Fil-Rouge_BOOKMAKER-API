@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\DataPersister\BookDataPersister;
 use App\Repository\BookRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -18,11 +19,29 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[ApiResource(
     operations: [
-        new Get(normalizationContext: ['groups' => ['book:read']]),
-        new GetCollection(normalizationContext: ['groups' => ['book:read']]),
-        new Post(denormalizationContext: ['groups' => ['book:write']]),
-        new Patch(denormalizationContext: ['groups' => ['book:write']]),
-        new Delete(),
+        new Get(
+            normalizationContext: ['groups' => ['book:read']],
+            security: "is_granted('PUBLIC_ACCESS')"
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => ['book:read']],
+            security: "is_granted('PUBLIC_ACCESS')"
+        ),
+        new Post(
+            denormalizationContext: ['groups' => ['book:write']],
+            security: "is_granted('ROLE_USER')",
+            processor: BookDataPersister::class,
+            securityMessage: "Seuls les utilisateurs connectés peuvent créer des livres"
+        ),
+        new Patch(
+            denormalizationContext: ['groups' => ['book:write']],
+            security: "is_granted('BOOK_EDIT', object)",
+            securityMessage: "Vous ne pouvez modifier que vos propres livres"
+        ),
+        new Delete(
+            security: "is_granted('BOOK_DELETE', object)",
+            securityMessage: "Vous ne pouvez supprimer que vos propres livres"
+        ),
     ]
 )]
 
@@ -74,6 +93,9 @@ class Book
      */
     #[ORM\OneToMany(targetEntity: Img::class, mappedBy: 'book')]
     private Collection $image;
+
+    #[ORM\ManyToOne(inversedBy: 'books')]
+    private ?User $userPro = null;
 
     public function __construct()
     {
@@ -220,6 +242,18 @@ class Book
                 $image->setBook(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUserPro(): ?User
+    {
+        return $this->userPro;
+    }
+
+    public function setUserPro(?User $userPro): static
+    {
+        $this->userPro = $userPro;
 
         return $this;
     }
