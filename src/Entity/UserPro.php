@@ -3,13 +3,25 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use App\DataPersister\UserDataPersister;
 use App\Repository\UserProRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserProRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Post(
+            uriTemplate: '/register',
+            denormalizationContext: ['groups' => ['user:write']],
+            validationContext: ['groups' => ['Default']],
+            security: "is_granted('PUBLIC_ACCESS')",
+            processor: UserDataPersister::class
+        )
+    ]
+)]
 class UserPro
 {
     #[ORM\Id]
@@ -35,7 +47,7 @@ class UserPro
     /**
      * @var Collection<int, Book>
      */
-    #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'userPro')]
+    #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'userPro', )]
     private Collection $books;
 
     public function __construct()

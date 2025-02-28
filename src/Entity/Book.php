@@ -103,7 +103,6 @@ class Book
     private ?UserPro $userPro = null;
 
 
-
     public function __construct()
     {
         $this->categorie = new ArrayCollection();
