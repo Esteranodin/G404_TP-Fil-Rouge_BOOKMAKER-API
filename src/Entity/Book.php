@@ -61,9 +61,9 @@ class Book
     #[Groups(['book:read', 'book:write'])]
     private ?string $title = null;
 
-    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     #[Groups(['book:read', 'book:write'])]
-    private ?\DateTimeImmutable $parutionAt = null;
+    private ?int $parutionAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['book:read', 'book:write'])]
@@ -132,12 +132,12 @@ class Book
         return $this;
     }
 
-    public function getParutionAt(): ?\DateTimeImmutable
+    public function getParutionAt(): ?int
     {
         return $this->parutionAt;
     }
 
-    public function setParutionAt(?\DateTimeImmutable $parutionAt): static
+    public function setParutionAt(?int $parutionAt): static
     {
         $this->parutionAt = $parutionAt;
 
@@ -257,4 +257,5 @@ class Book
 
         return $this;
     }
+
 }

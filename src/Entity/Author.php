@@ -89,6 +89,16 @@ class Author
         return $this;
     }
 
+    public function getFullName(): string
+    {
+        return $this->firstname . ' ' . $this->lastname;
+    }
+
+    public function setFullName(): string
+    {
+        return $this->firstname . ' ' . $this->lastname;
+    }
+
     /**
      * @return Collection<int, Book>
      */
