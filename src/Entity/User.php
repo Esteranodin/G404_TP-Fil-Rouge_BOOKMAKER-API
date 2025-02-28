@@ -50,15 +50,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:write'])]
     private ?string $password = null;
 
-    /**
-     * @var Collection<int, Book>
-     */
-    #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'userPro')]
-    private Collection $books;
+    // /**
+    //  * @var Collection<int, Book>
+    //  */
+    // #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'userPro')]
+    // private Collection $books;
+
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?UserPro $userPro = null;
 
     public function __construct()
     {
-        $this->books = new ArrayCollection();
+        // $this->books = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -141,32 +144,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    /**
-     * @return Collection<int, Book>
-     */
-    public function getBooks(): Collection
+    // /**
+    //  * @return Collection<int, Book>
+    //  */
+    // public function getBooks(): Collection
+    // {
+    //     return $this->books;
+    // }
+
+    public function getUserPro(): ?UserPro
     {
-        return $this->books;
+        return $this->userPro;
     }
 
-    public function addBook(Book $book): static
+    public function setUserPro(?UserPro $userPro): static
     {
-        if (!$this->books->contains($book)) {
-            $this->books->add($book);
-            $book->setUserPro($this);
+        // unset the owning side of the relation if necessary
+        if ($userPro === null && $this->userPro !== null) {
+            $this->userPro->setUser(null);
         }
 
-        return $this;
-    }
-
-    public function removeBook(Book $book): static
-    {
-        if ($this->books->removeElement($book)) {
-            // set the owning side to null (unless already changed)
-            if ($book->getUserPro() === $this) {
-                $book->setUserPro(null);
-            }
+        // set the owning side of the relation if necessary
+        if ($userPro !== null && $userPro->getUser() !== $this) {
+            $userPro->setUser($this);
         }
+
+        $this->userPro = $userPro;
 
         return $this;
     }
