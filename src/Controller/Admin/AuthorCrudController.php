@@ -3,10 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Author;
-use Dom\Text;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class AuthorCrudController extends AbstractCrudController
@@ -21,7 +19,9 @@ class AuthorCrudController extends AbstractCrudController
     {
         return [
             IdField::new('id')->hideOnForm(),
-            TextField::new('fullname'),
+            TextField::new('fullname')->onlyOnIndex(),
+            TextField::new('firstname')->onlyOnForms(),
+            TextField::new('lastname')->onlyOnForms(),
         ];
     }
    

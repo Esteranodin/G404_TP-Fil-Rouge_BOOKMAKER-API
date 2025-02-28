@@ -55,9 +55,7 @@ class Author
 
     public function __toString()
     {
-        return $this->lastname;
-        return $this->firstname;
-
+        return $this->getFullName();
     }
 
     public function getId(): ?int
