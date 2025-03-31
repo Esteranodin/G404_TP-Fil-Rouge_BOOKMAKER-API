@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Author;
 use App\Entity\Book;
 use App\Entity\Categorie;
+use App\Entity\UserPro;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;

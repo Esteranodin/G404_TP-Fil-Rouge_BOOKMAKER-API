@@ -15,7 +15,7 @@ class UserProDataPersister implements ProcessorInterface
         private readonly UserPasswordHasherInterface $passwordHasher
     ) {}
 
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): User
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): object
     {
         if ($data instanceof User) {
             if ($data->getPassword()) {

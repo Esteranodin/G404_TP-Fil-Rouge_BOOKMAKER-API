@@ -29,22 +29,18 @@ use Symfony\Component\Serializer\Attribute\Groups;
         ),
         new Post(
             denormalizationContext: ['groups' => ['book:write']],
-            security: "is_granted('ROLE_USER')",
+            security: "is_granted('ROLE_USER_PRO')",
             processor: BookDataPersister::class,
-            securityMessage: "Seuls les utilisateurs connectés peuvent créer des livres"
-            // changer en role_PRO et ajouter un message pour les PRO
-            // security: "is_granted('ROLE_PRO')",
-            // securityMessage: "Seuls les professionnels peuvent créer des livres"
+            securityMessage: "Seuls les professionnels peuvent créer des livres"
+    
         ),
         new Patch(
             denormalizationContext: ['groups' => ['book:write']],
             security: "is_granted('BOOK_EDIT', object)",
-            // security: "is_granted('ROLE_PRO') and is_granted('BOOK_EDIT', object)",
             securityMessage: "Vous ne pouvez modifier que vos propres livres"
         ),
         new Delete(
             security: "is_granted('BOOK_DELETE', object)",
-            // security: "is_granted('ROLE_PRO') and is_granted('BOOK_DELETE', object)",
             securityMessage: "Vous ne pouvez supprimer que vos propres livres"
         ),
     ]

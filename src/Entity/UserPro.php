@@ -3,22 +3,28 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Post;
-use App\DataPersister\UserDataPersister;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Put;
 use App\Repository\UserProRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserProRepository::class)]
 #[ApiResource(
     operations: [
-        new Post(
-            uriTemplate: '/register',
-            denormalizationContext: ['groups' => ['user:write']],
-            validationContext: ['groups' => ['Default']],
-            security: "is_granted('PUBLIC_ACCESS')",
-            processor: UserDataPersister::class
+        new GetCollection(
+            normalizationContext: ['groups' => ['userPro:read']]
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['userPro:read']],
+            security: "is_granted('ROLE_USER') and object.getUser() == user or is_granted('ROLE_ADMIN')"
+        ),
+        new Put(
+            denormalizationContext: ['groups' => ['userPro:update']],
+            security: "(is_granted('ROLE_USER_PRO') and object.getUser() == user and object.isValidated() == true) or is_granted('ROLE_ADMIN')"
         )
     ]
 )]
@@ -26,23 +32,33 @@ class UserPro
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
+    #[Groups(['userPro:read'])]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'userPro', cascade: ['persist', 'remove'])]
-    private ?User $user = null;
+    #[ORM\OneToOne(inversedBy: 'userPro', cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private User $user;
 
-    #[ORM\Column]
-    private ?bool $isValidated = null;
-
+    #[ORM\Column(type: 'boolean')]
+    #[Groups(['userPro:read', 'admin:write'])]
+    private bool $isValidated = false;
+    
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['userPro:read', 'userPro:update'])]
+    private ?string $companyName = null;
+    
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['userPro:read', 'userPro:update'])]
+    private ?string $companyAdress = null;
+    
+    #[ORM\Column(length: 20, nullable: true)]
+    #[Groups(['userPro:read', 'userPro:update'])]
     private ?string $phone = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $companyName = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $companyAdress = null;
+    #[ORM\Column(type: 'datetime_immutable')]
+    #[Groups(['userPro:read'])]
+    private \DateTimeImmutable $requestedAt;
 
     /**
      * @var Collection<int, Book>
@@ -50,9 +66,12 @@ class UserPro
     #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'userPro', )]
     private Collection $books;
 
+    // Constructeur pour initialiser requestedAt
     public function __construct()
     {
         $this->books = new ArrayCollection();
+        $this->isValidated = false;
+        $this->requestedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int

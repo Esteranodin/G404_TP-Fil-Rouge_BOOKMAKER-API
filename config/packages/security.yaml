@@ -39,15 +39,9 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/api, roles: ROLE_PRO }
+        # - { path: ^/api, roles: ROLE_USER_PRO }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
-  # Easy way to control access for large sections of your site
-  # Note: Only the *first* access control that matches will be used
-#   access_control:
-#     - { path: ^/api, roles: ROLE_PRO }
-#     - { path: ^/admin, roles: ROLE_ADMIN }
-#     - { path: ^/profile, roles: ROLE_USER }
 
 when@test:
   security:

@@ -3,6 +3,7 @@
 namespace App\Security\Voter;
 
 use App\Entity\Book;
+use App\Entity\User;
 use App\Entity\UserPro;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -28,14 +29,18 @@ final class BookVoter extends Voter{
 
         /** @var Book $book */
         $book = $subject;
-
-        /** @var UserPro $userPro */
-        $book = $subject;
-
-        return match($attribute) {
-            self::EDIT, self::DELETE => $this->isOwner($book, $userPro),
-            default => false,
-        };
+        
+        // Vérifie si l'utilisateur a un profil professionnel
+        if ($user instanceof User && $user->getUserPro()) {
+            $userPro = $user->getUserPro();
+            
+            return match($attribute) {
+                self::EDIT, self::DELETE => $this->isOwner($book, $userPro),
+                default => false,
+            };
+        }
+        
+        return false;
     }
 
     private function isOwner(Book $book, UserPro $userPro): bool
