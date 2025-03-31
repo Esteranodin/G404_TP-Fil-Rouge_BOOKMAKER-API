@@ -27,3 +27,18 @@ composer require orm
 
 **Création fichier** .env.local et mettre à jour connexion BDD (ligne DATABASE_URL)
 
+**Création** dossier jwt dans config (config/jwt) + ouvrir un terminal **Gitbash** 
+
+    * Configurer passphrase :
+
+    ```bash
+    openssl genrsa -out config/jwt/private.pem -aes256 4096
+    ```
+
+    * Générer la clef privée et la clef publique
+
+    ```bash
+    openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+    ```
+
+    * Penser a modifier .env.local
