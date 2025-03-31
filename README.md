@@ -5,6 +5,10 @@ TP qui court sur toute la formation, avec plusieurs refactorisations (de la POO 
 # BookMarket
 
 ```bash
+composer install
+```
+
+```bash
 symfony server:start
 ```
 
