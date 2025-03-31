@@ -1,15 +1,29 @@
-# G404_TP-Fil-Rouge_BOOKMAKER
+# BookMaker-API
 
 TP qui court sur toute la formation, avec plusieurs refactorisations (de la POO vanilla à la création d'une API) // Création d'une application web front + back pour une entreprise de vente de livre d'occasion
 
-# BookMarket
+## Généralités
+
+```bash
+symfony server:start
+```
+**accès** API : url (local) + /api
+
+## Dépendances
 
 ```bash
 composer install
 ```
 
+## Gestion API / BDD
+
 ```bash
-symfony server:start
+ composer require symfony/maker-bundle --dev
 ```
 
-/api
+```bash
+composer require orm
+```
+
+**Création fichier** .env.local et mettre à jour connexion BDD (ligne DATABASE_URL)
+
