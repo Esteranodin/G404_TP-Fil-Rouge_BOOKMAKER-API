@@ -24,7 +24,7 @@ class BookCrudController extends AbstractCrudController
     {
         return [
             IdField::new('id')->hideOnForm(),
-            AssociationField::new('userPro'),
+            // AssociationField::new('userPro'),
             TextField::new('isbn'),
             TextField::new('title'),
             IntegerField::new('parutionAt', 'publication year')

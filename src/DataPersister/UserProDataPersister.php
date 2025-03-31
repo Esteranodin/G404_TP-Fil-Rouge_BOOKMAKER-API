@@ -8,7 +8,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class UserDataPersister implements ProcessorInterface
+class UserProDataPersister implements ProcessorInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -23,7 +23,12 @@ class UserDataPersister implements ProcessorInterface
                 $data->setPassword($hashedPassword);
             }
 
-            $data->setRoles(['ROLE_USER']);
+            // $data->setRoles(['ROLE_USER']);
+
+                if ($data->getUserPro()) {
+                    $data->getUserPro()->setIsValidated(true);
+                    $data->setRoles(['ROLE_USER_PRO']);
+                }
                 
             $this->entityManager->persist($data);
             $this->entityManager->flush();

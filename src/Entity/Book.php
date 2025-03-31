@@ -32,14 +32,19 @@ use Symfony\Component\Serializer\Attribute\Groups;
             security: "is_granted('ROLE_USER')",
             processor: BookDataPersister::class,
             securityMessage: "Seuls les utilisateurs connectés peuvent créer des livres"
+            // changer en role_PRO et ajouter un message pour les PRO
+            // security: "is_granted('ROLE_PRO')",
+            // securityMessage: "Seuls les professionnels peuvent créer des livres"
         ),
         new Patch(
             denormalizationContext: ['groups' => ['book:write']],
             security: "is_granted('BOOK_EDIT', object)",
+            // security: "is_granted('ROLE_PRO') and is_granted('BOOK_EDIT', object)",
             securityMessage: "Vous ne pouvez modifier que vos propres livres"
         ),
         new Delete(
             security: "is_granted('BOOK_DELETE', object)",
+            // security: "is_granted('ROLE_PRO') and is_granted('BOOK_DELETE', object)",
             securityMessage: "Vous ne pouvez supprimer que vos propres livres"
         ),
     ]
@@ -95,7 +100,8 @@ class Book
     private Collection $image;
 
     #[ORM\ManyToOne(inversedBy: 'books')]
-    private ?User $userPro = null;
+    private ?UserPro $userPro = null;
+
 
     public function __construct()
     {
@@ -246,16 +252,17 @@ class Book
         return $this;
     }
 
-    public function getUserPro(): ?User
+    public function getUserPro(): ?UserPro
     {
         return $this->userPro;
     }
 
-    public function setUserPro(?User $userPro): static
+    public function setUserPro(?UserPro $userPro): static
     {
         $this->userPro = $userPro;
 
         return $this;
     }
+
 
 }

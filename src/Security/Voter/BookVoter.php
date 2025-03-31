@@ -3,7 +3,7 @@
 namespace App\Security\Voter;
 
 use App\Entity\Book;
-use App\Entity\User;
+use App\Entity\UserPro;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -29,14 +29,17 @@ final class BookVoter extends Voter{
         /** @var Book $book */
         $book = $subject;
 
+        /** @var UserPro $userPro */
+        $book = $subject;
+
         return match($attribute) {
-            self::EDIT, self::DELETE => $this->isOwner($book, $user),
+            self::EDIT, self::DELETE => $this->isOwner($book, $userPro),
             default => false,
         };
     }
 
-    private function isOwner(Book $book, User $user): bool
+    private function isOwner(Book $book, UserPro $userPro): bool
     {
-        return $book->getUserPro() === $user;
+        return $book->getUserPro() === $userPro;
     }
 }
