@@ -29,16 +29,16 @@ composer require orm
 
 **Création** dossier jwt dans config (config/jwt) + ouvrir un terminal **Gitbash** 
 
-    * Configurer passphrase :
+* Configurer passphrase :
 
-    ```bash
-    openssl genrsa -out config/jwt/private.pem -aes256 4096
-    ```
+```bash
+openssl genrsa -out config/jwt/private.pem -aes256 4096
+```
 
-    * Générer la clef privée et la clef publique
+* Générer la clef privée et la clef publique
 
-    ```bash
-    openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
-    ```
+```bash
+openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+```
 
-    * Penser a modifier .env.local
+* Penser a modifier .env.local
