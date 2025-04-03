@@ -56,9 +56,9 @@ class UserPro
     #[Groups(['userPro:read', 'userPro:update'])]
     private ?string $phone = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
-    #[Groups(['userPro:read'])]
-    private \DateTimeImmutable $requestedAt;
+    // #[ORM\Column(type: 'datetime_immutable')]
+    // #[Groups(['userPro:read'])]
+    // private \DateTimeImmutable $requestedAt;
 
     /**
      * @var Collection<int, Book>
@@ -71,7 +71,7 @@ class UserPro
     {
         $this->books = new ArrayCollection();
         $this->isValidated = false;
-        $this->requestedAt = new \DateTimeImmutable();
+        // $this->requestedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
